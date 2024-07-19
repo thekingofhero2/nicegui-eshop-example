@@ -1,4 +1,4 @@
-from nicegui import ui,app,Client
+from nicegui import ui,app,Client,native
 from fastapi import Request
 from fastapi.responses import RedirectResponse
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -57,4 +57,5 @@ async def main_page() -> None:
                     thumb_url=f'{image_base_url}/300/200',
                     orig_url=f'{image_base_url}/{image["width"]}/{image["height"]}',
                 ).classes('w-[300px] h-[200px]')
-ui.run(storage_secret="abc")
+#ui.run(storage_secret="abc")
+ui.run(storage_secret="abc",reload=False, port=native.find_open_port())
