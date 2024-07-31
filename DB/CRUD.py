@@ -8,6 +8,13 @@ def check_pwd(db :Session,uname:str,pwd:str):
         return whoami.id
     return None
 
+def update_pwd(db :Session,uname:str,pwd:str):
+    whoami = db.query(models.User).filter(models.User.uname == uname).first()
+    whoami.pwd = pwd
+    db.commit()
+    
+    return True
+
 def check_user_exists(db :Session,uname:str):
     q = db.query(models.User).filter(models.User.uname == uname)
     return db.query(q.exists()).scalar()
@@ -48,3 +55,7 @@ def create_asset(db :Session,
     db.commit()
     db.refresh(asset_obj)
     return asset_obj
+
+def query_all_asset(db :Session):
+    all = db.query( models.DevelopAsset).all()
+    return list(filter(lambda x : x.asset_img_url is not None and x.assetinfo is not None,all))

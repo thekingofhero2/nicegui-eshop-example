@@ -118,13 +118,14 @@ class AssetFileMaker:
     def add_new_one(self,e:events.ClickEventArguments):
         self.init()
         self.signals_dict["task.show"] = False
-        self.asset_obj_dict["assetpath"] = os.path.join(ASSETS_DIR,"uploads",str(time.time()))
+        #self.asset_obj_dict["assetpath"] = os.path.join(ASSETS_DIR,"uploads",str(time.time()))
+        self.asset_obj_dict["assetpath"] = os.path.join("uploads",str(time.time()))
         self.asset_org_dir = os.path.join(self.asset_obj_dict["assetpath"],"org")
         self.asset_des_dir = os.path.join(self.asset_obj_dict["assetpath"],"des")
         self.asset_before_img_path = os.path.join(self.asset_obj_dict["assetpath"],"付费前图片.png")
         self.asset_after_img_path = os.path.join(self.asset_obj_dict["assetpath"],"付费后图片.png")
         #本资源根目录
-        os.mkdir(self.asset_obj_dict["assetpath"])
+        os.makedirs(self.asset_obj_dict["assetpath"])
         #本资源原始文件目录
         os.mkdir(self.asset_org_dir)
         #本资源目标目录
@@ -160,7 +161,6 @@ class AssetFileMaker:
         with ui.row().classes("w-full justify-centrer").bind_visibility(self.signals_dict,"task.show"):
             with ui.stepper().classes('w-full') as stepper:
                 with ui.step('一、资源制作'):
-                    ui.label('Preheat the oven to 350 degrees')
                     with ui.stepper_navigation():
                         with ui.column():
                             ui.label("1.输入资源名称").classes("text-h6 text-blue-grey-9")
@@ -198,6 +198,10 @@ class AssetFileMaker:
                                 with ui.card_section():
                                     ui.label(self.asset_obj_dict["assetinfo"].split("\n")[0])
                                 ui.button('下载到本地检查', on_click=lambda: ui.download(os.path.join(self.asset_obj_dict["assetpath"],"asset.zip")))
+                            ui.label("""核验内容应包含：""")
+                            ui.label("""①文件是否完整""")
+                            ui.label("""②密码是否可用""")
+                            ui.label("""③8图片付费链接是否已核验通过""")                            
                             ui.checkbox("检查已完成",on_change=self.update_checked).bind_value(self.asset_obj_dict,"if_checked")
                             with ui.row():
                                 ui.button('上一步', on_click=stepper.previous).props('flat')
@@ -240,6 +244,7 @@ class AssetFileMaker:
             self.signals_dict["complete_step"] = True
         else:
             self.signals_dict["complete_step"] = False
+        self.asset_obj.asset_img_url = self.asset_obj_dict['asset_img_url']
         self.asset_obj.if_checked = self.asset_obj_dict['if_checked']
         self.db.commit()
 
