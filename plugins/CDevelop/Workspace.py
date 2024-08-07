@@ -65,42 +65,46 @@ class AssetFileMaker:
         -- 极速图床版
         上传付费前可看见的图片
         """
-        # ##################
-        # with open(self.asset_before_img_path,'rb') as fp:
-        #     res = requests.post("https://tucdn.wpon.cn/api/upload",files={"image":(f"{time.time()}.png",fp.read())},headers={"token":jisu_pic_token})
+        jisu_pic_token = app.storage.user['auth_config']['jisu_pic_token']
+        pic8_pid = app.storage.user['auth_config']['pic8_pid']
+        pic8_key = app.storage.user['auth_config']['pic8_key']
+
+        ##################
+        with open(self.asset_before_img_path,'rb') as fp:
+            res = requests.post("https://tucdn.wpon.cn/api/upload",files={"image":(f"{time.time()}.png",fp.read())},headers={"token":jisu_pic_token})
         
-        # res_json = json.loads(res.content.decode("utf-8"))
-        # #print(res_json)
-        # if res_json['code'] == 200:
-        #     self.asset_obj_dict["asset_before_img_url"] = res_json["data"]["url"]
-        # """
-        # 上传付费后可看见的图片
-        # """
-        # with open(self.asset_after_img_path,'rb') as fp:
-        #     res = requests.post("https://tucdn.wpon.cn/api/upload",files={"image":(f"{time.time()}.png",fp.read())},headers={"token":jisu_pic_token})
-        # #print("--")
-        # res_json = json.loads(res.content.decode("utf-8"))
-        # #print(res_json)
-        # if res_json['code'] == 200:
-        #     self.asset_obj_dict["asset_after_img_url"] = res_json["data"]["url"]
+        res_json = json.loads(res.content.decode("utf-8"))
+        #print(res_json)
+        if res_json['code'] == 200:
+            self.asset_obj_dict["asset_before_img_url"] = res_json["data"]["url"]
+        """
+        上传付费后可看见的图片
+        """
+        with open(self.asset_after_img_path,'rb') as fp:
+            res = requests.post("https://tucdn.wpon.cn/api/upload",files={"image":(f"{time.time()}.png",fp.read())},headers={"token":jisu_pic_token})
+        #print("--")
+        res_json = json.loads(res.content.decode("utf-8"))
+        #print(res_json)
+        if res_json['code'] == 200:
+            self.asset_obj_dict["asset_after_img_url"] = res_json["data"]["url"]
 
         
-        # #上传图片至8图片
-        # #to_8pic_url = f"""http://web.8tupian.com/api/b.php?act=up2&pic={self.asset_obj_dict["asset_before_img_url"]}&pic2={self.asset_obj_dict["asset_after_img_url"]}&price={int(self.asset_obj_dict["assetprice"] * 100)}&pid={pic8_pid}&key={pic8_key}"""   
-        # to_8pic_url = f"""http://web.8tupian.com/api/b.php?act=up2&pic={self.asset_obj_dict["asset_before_img_url"]}&pic2={self.asset_obj_dict["asset_after_img_url"]}&price=1&pid={pic8_pid}&key={pic8_key}""" 
-        # res = requests.post(to_8pic_url)
-        # res_json = json.loads(res.content.decode("utf-8"))
-        # print(res_json)
-        # #{'code': 0, 'picurl': 'http://dt1.8tupian.net/2/14535a30b1989.pg1'}
-        # #http://dt3.8tupian.net/2/14535a31b1.pg1
-        # if res_json['code'] == 0:
-        #     self.asset_obj_dict["asset_pic8_url"] = res_json["picurl"]
-        # ##############
+        #上传图片至8图片
+        #to_8pic_url = f"""http://web.8tupian.com/api/b.php?act=up2&pic={self.asset_obj_dict["asset_before_img_url"]}&pic2={self.asset_obj_dict["asset_after_img_url"]}&price={int(self.asset_obj_dict["assetprice"] * 100)}&pid={pic8_pid}&key={pic8_key}"""   
+        to_8pic_url = f"""http://web.8tupian.com/api/b.php?act=up2&pic={self.asset_obj_dict["asset_before_img_url"]}&pic2={self.asset_obj_dict["asset_after_img_url"]}&price=1&pid={pic8_pid}&key={pic8_key}""" 
+        res = requests.post(to_8pic_url)
+        res_json = json.loads(res.content.decode("utf-8"))
+        print(res_json)
+        #{'code': 0, 'picurl': 'http://dt1.8tupian.net/2/14535a30b1989.pg1'}
+        #http://dt3.8tupian.net/2/14535a31b1.pg1
+        if res_json['code'] == 0:
+            self.asset_obj_dict["asset_pic8_url"] = res_json["picurl"]
+        ##############
 
 
-        self.asset_obj_dict["asset_before_img_url"]  = "https://tucdn.wpon.cn/2024/07/19/ecbab3ee7a236.png"
-        self.asset_obj_dict["asset_after_img_url"] = "https://tucdn.wpon.cn/2024/07/19/363fa34185f7b.png"
-        self.asset_obj_dict["asset_pic8_url"] = "http://dt2.8tupian.net/2/14535a32b1.pg1"
+        # self.asset_obj_dict["asset_before_img_url"]  = "https://tucdn.wpon.cn/2024/07/19/ecbab3ee7a236.png"
+        # self.asset_obj_dict["asset_after_img_url"] = "https://tucdn.wpon.cn/2024/07/19/363fa34185f7b.png"
+        # self.asset_obj_dict["asset_pic8_url"] = "http://dt2.8tupian.net/2/14535a32b1.pg1"
 
         if self.asset_obj_dict["asset_before_img_url"] is not None \
             and self.asset_obj_dict["asset_after_img_url"] is not None \
@@ -228,8 +232,9 @@ class AssetFileMaker:
         self.signals_dict["first_next_step"] = True
 
     def make_zipfile(self,):
+        self.asset_obj.assetinfo = self.asset_obj_dict["assetinfo"]
         with open(os.path.join(self.asset_des_dir,"说明.txt"),'w') as fpw:
-            fpw.write(self.ui_asset_info.value)
+            fpw.write( self.asset_obj_dict["assetinfo"])
         # 创建一个加密的ZIP文件
         ZipTools.zip_folder(self.asset_org_dir, os.path.join(self.asset_des_dir,"encrypted.zip"), self.ui_pwd.value)
 
@@ -237,6 +242,7 @@ class AssetFileMaker:
         ZipTools.zip_folder(self.asset_des_dir, os.path.join(self.asset_obj_dict["assetpath"],"asset.zip"))
 
         self.signals_dict["second_next_step"] = True
+        self.db.commit()
 
     def update_checked(self,e :events.ValueChangeEventArguments):
         self.asset_obj_dict['if_checked'] = e.value
