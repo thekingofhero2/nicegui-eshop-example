@@ -29,22 +29,48 @@ async def CDevelop(db :Session = Depends(get_db)):
                 update_pwd(db ,"admin",md5(p2.value.encode("utf8")).hexdigest())
         ui.button('保存密码', on_click=save_pwd)
         ui.separator()
-        ui.label('2.参数配置').classes("text-h2 text-red-6")
-        #jisu_pic_token
-        #pic8_pid 
-        #pic8_key 
-        
-        if os.path.exists('auth.auth'):
-            with open('auth.auth') as fp:
-                app.storage.user['auth_config'] = json.load(fp)
-        else:
-            app.storage.user['auth_config'] = {"jisu_pic_token":"","pic8_pid":"","pic8_key":""}
-        
-        jisu_pic_token = ui.input("极速图床的token").bind_value(app.storage.user['auth_config'],"jisu_pic_token")
-        pic8_pid = ui.input("8pic的PID").bind_value(app.storage.user['auth_config'],"pic8_pid")
-        pic8_key = ui.input("8pic的key").bind_value(app.storage.user['auth_config'],"pic8_key")
-        def save_auth(e):
-            with open('auth.auth','w') as fpw:
-                json.dump(app.storage.user['auth_config'],fp=fpw)
-        ui.button('保存账号信息', on_click=save_auth)
+        with ui.row().classes("w-full"):
+            with ui.column().classes("col-span-7"):
+                ui.label('2.参数配置').classes("text-h2 text-red-6")
+                #jisu_pic_token
+                #pic8_pid 
+                #pic8_key 
+                
+                if os.path.exists('auth.auth'):
+                    with open('auth.auth') as fp:
+                        app.storage.user['auth_config'] = json.load(fp)
+                else:
+                    app.storage.user['auth_config'] = {"jisu_pic_token":"","pic8_pid":"","pic8_key":""}
+                
+                jisu_pic_token = ui.input("极速图床的token").bind_value(app.storage.user['auth_config'],"jisu_pic_token")
+                pic8_pid = ui.input("8pic的PID").bind_value(app.storage.user['auth_config'],"pic8_pid")
+                pic8_key = ui.input("8pic的key").bind_value(app.storage.user['auth_config'],"pic8_key")
+                def save_auth(e):
+                    with open('auth.auth','w') as fpw:
+                        json.dump(app.storage.user['auth_config'],fp=fpw)
+                ui.button('保存账号信息', on_click=save_auth)
+            with ui.column().classes("col-span-5"):
+                @ui.refreshable
+                def check_8pic():
+                    url = f"http://web.8tupian.com/api/a.php?act=query&pid={app.storage.user['auth_config']['pic8_pid']}&key={app.storage.user['auth_config']['pic8_key']}"
+                    import requests 
+                    res = requests.get(url)
+                    js = json.loads(res.content.decode('utf-8'))
+                    if js['code'] == 0:
+                        with ui.card():
+                            ui.label(f"用户名：{js['name']}")
+                            ui.label(f"联系QQ:{js['contactqq']}")
+                            ui.label(f"联系邮箱：{js['email']}")
+                            ui.label(f"联系电话：{js['phone']}")
+                            ui.label(f"注册时间：{js['registerTime']}")
+                            ui.label(f"最后登录时间：{js['lastlandtime']}")
+                            ui.label(f"账户余额：{float(js['balance'])/100}")
+                            ui.label(f"支付宝账号：{js['zfb_account']}")
+                            ui.label(f"结算次数：{js['jiesuannum']}")
+                            ui.label(f"历史结算总金额：{float(js['jiesuansum'])/100}")
+                            ui.label(f"账户状态：{'正常' if js['warning'] == '0' else '异常'}")
+                    else:
+                        ui.label("参数错误")    
+                ui.button('验证8图片',on_click=lambda : check_8pic.refresh())
+                check_8pic()
         # #待上架（待验证（）/已验证）
