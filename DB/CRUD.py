@@ -60,6 +60,11 @@ def query_all_asset(db :Session):
     all = db.query( models.DevelopAsset).all()
     return list(filter(lambda x : x.asset_img_url is not None and x.assetinfo is not None,all))
 
+def query_asset_by_if_Check(db :Session,if_check=0):
+    all = db.query( models.DevelopAsset).filter(models.DevelopAsset.if_check == if_check).all()
+    return list(all)
+
+
 def query_asset_by_shelves_status(db :Session,shelves_status=1):
     all = db.query( models.DevelopAsset).filter(models.DevelopAsset.shelves_status == shelves_status).all()
     return list(filter(lambda x : x.asset_img_url is not None and x.assetinfo is not None,all))

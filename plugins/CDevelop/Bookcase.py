@@ -21,16 +21,10 @@ async def Bookcase(db:Session = Depends(get_db)):
             
         #ui.separator()
         with ui.row().classes('w-full'):
-            for asset_obj in query_all_asset(db):
-                
-                lightbox.add_asset(asset_obj)
-                # lightbox.add_image(
-                #     asset_img_url = asset_obj.asset_img_url,
-                #     assetinfo = asset_obj.assetinfo,
-                #     assetpath = asset_obj.assetpath
-                # )
-            # for image in images.json():  # picsum returns a list of images as json data
-            #     # we can use the image ID to construct the image URLs
-            #     image_base_url = f'https://picsum.photos/id/{image["id"]}'
-            #     # the lightbox allows us to add images which can be opened in a full screen dialog
-                
+            asset_list = query_all_asset(db)
+            if len(asset_list) == 0:
+                ui.label("空空如也,快去工作台添加资源~").classes("text-h2")
+            else:
+                for asset_obj in asset_list:
+                    lightbox.add_asset(asset_obj)
+               

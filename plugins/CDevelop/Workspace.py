@@ -65,10 +65,17 @@ class AssetFileMaker:
         -- 极速图床版
         上传付费前可看见的图片
         """
+        
+   
+        
         jisu_pic_token = app.storage.user['auth_config']['jisu_pic_token']
         pic8_pid = app.storage.user['auth_config']['pic8_pid']
         pic8_key = app.storage.user['auth_config']['pic8_key']
-
+        if jisu_pic_token == '' or \
+           pic8_pid == '' or \
+            pic8_key == ''   :
+            ui.notify("请回到管理后台，填写“2.参数配置”并做好验证",position="center",type="warning")
+            return
         ##################
         with open(self.asset_before_img_path,'rb') as fp:
             res = requests.post("https://tucdn.wpon.cn/api/upload",files={"image":(f"{time.time()}.png",fp.read())},headers={"token":jisu_pic_token})
@@ -262,3 +269,5 @@ async def Workspace(db:Session = Depends(get_db)):
     with frame("我的工作台",left_navs,show_drawer=True):
         ui.button("点击按钮，创建一个新任务",on_click=obj.add_new_one)
         obj.ui_maker()
+        
+        

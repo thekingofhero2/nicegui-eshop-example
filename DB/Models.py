@@ -24,6 +24,6 @@ class DevelopAsset(Base):
     assetpath = Column(VARCHAR(255),comment = "资源压缩后的路径")
     assetinfo  = Column(TEXT)
     assetprice_fen = Column(Integer,comment = "资源价格,分")
-    if_checked = Column(Boolean,comment = "是否已经检查完成")
+    if_checked = Column(Boolean,comment = "是否已经检查完成",default = 0)
     shelves_status = Column(Integer,comment = "上架状态：0-未上架 1-已上架",default = 0)
 
