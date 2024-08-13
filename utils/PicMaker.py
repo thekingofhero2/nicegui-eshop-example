@@ -12,7 +12,7 @@ class PicMaker:
         """
         # 设置图片大小
         width, height = 800, 800
-        image = Image.new('RGB', (width, height), color = 'black')
+        image = Image.new('RGB', (width, height), color = 'white')
         
         # 获取文字大小
         #text_width, text_height = font.getsize(text)
@@ -25,10 +25,10 @@ class PicMaker:
         draw = ImageDraw.Draw(image)
         
         #绘制小字
-        draw.text((10,  40), text=title, font=ImageFont.truetype(self.font_path, 30), fill='white')
+        draw.text((10,  40), text=title, font=ImageFont.truetype(self.font_path, 30), fill='black')
 
         # 绘制文字
-        draw.text((10, (height ) / 2), text, font=ImageFont.truetype(self.font_path, 60), fill='white')
+        draw.text((10, (height ) / 2), text, font=ImageFont.truetype(self.font_path, 60), fill='black')
         
         #绘制小字
         draw.text(((width ) / 2, height - 20), "感谢开源字体`临海隶书`", font=ImageFont.truetype(self.font_path, 20), fill='red')

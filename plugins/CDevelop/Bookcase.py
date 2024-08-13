@@ -25,6 +25,7 @@ async def Bookcase(db:Session = Depends(get_db)):
             if len(asset_list) == 0:
                 ui.label("空空如也,快去工作台添加资源~").classes("text-h2")
             else:
+                ui.label("""上架前一定确认好8图片付费链接是否已核验通过！！！（也就是你的付费链接是否可以正常访问）""").classes("text-h2 text-red-2")
                 for asset_obj in asset_list:
                     lightbox.add_asset(asset_obj)
                

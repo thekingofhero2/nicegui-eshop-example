@@ -212,7 +212,7 @@ class AssetFileMaker:
                             ui.label("""核验内容应包含：""")
                             ui.label("""①文件是否完整""")
                             ui.label("""②密码是否可用""")
-                            ui.label("""③8图片付费链接是否已核验通过""")                            
+                                                        
                             ui.checkbox("检查已完成",on_change=self.update_checked).bind_value(self.asset_obj_dict,"if_checked")
                             with ui.row():
                                 ui.button('上一步', on_click=stepper.previous).props('flat')

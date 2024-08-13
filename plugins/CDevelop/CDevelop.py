@@ -45,9 +45,12 @@ async def CDevelop(db :Session = Depends(get_db)):
                 jisu_pic_token = ui.input("极速图床的token").bind_value(app.storage.user['auth_config'],"jisu_pic_token")
                 pic8_pid = ui.input("8pic的PID").bind_value(app.storage.user['auth_config'],"pic8_pid")
                 pic8_key = ui.input("8pic的key").bind_value(app.storage.user['auth_config'],"pic8_key")
+                contact_way = ui.input("联系方式（qq/微信/电话/邮箱等，展示在首页）")
                 def save_auth(e):
                     with open('auth.auth','w') as fpw:
                         json.dump(app.storage.user['auth_config'],fp=fpw)
+                    with open('auth.contact','w') as fpw:
+                        json.dump({"contact_way":contact_way.value},fp=fpw)
                 ui.button('保存账号信息', on_click=save_auth)
             with ui.column().classes("col-span-5"):
                 @ui.refreshable
