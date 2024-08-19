@@ -32,7 +32,6 @@ async def CDevelop(db :Session = Depends(get_db)):
         with ui.row().classes("w-full"):
             with ui.column().classes("col-span-7"):
                 ui.label('2.参数配置').classes("text-h2 text-red-6")
-                #jisu_pic_token
                 #pic8_pid 
                 #pic8_key 
                 
@@ -40,9 +39,9 @@ async def CDevelop(db :Session = Depends(get_db)):
                     with open('auth.auth') as fp:
                         app.storage.user['auth_config'] = json.load(fp)
                 else:
-                    app.storage.user['auth_config'] = {"jisu_pic_token":"","pic8_pid":"","pic8_key":""}
+                    app.storage.user['auth_config'] = {"pic_token":"","pic8_pid":"","pic8_key":""}
                 
-                jisu_pic_token = ui.input("极速图床的token").bind_value(app.storage.user['auth_config'],"jisu_pic_token")
+                pic_token = ui.input("图床的token").bind_value(app.storage.user['auth_config'],"pic_token")
                 pic8_pid = ui.input("8pic的PID").bind_value(app.storage.user['auth_config'],"pic8_pid")
                 pic8_key = ui.input("8pic的key").bind_value(app.storage.user['auth_config'],"pic8_key")
                 contact_way = ui.input("联系方式（qq/微信/电话/邮箱等，展示在首页）")

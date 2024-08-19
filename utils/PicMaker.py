@@ -29,7 +29,8 @@ class PicMaker:
 
         # 绘制文字
         draw.text((10, (height ) / 2), text, font=ImageFont.truetype(self.font_path, 60), fill='black')
-        
+        # 绘制文字
+        draw.text((10, height - 60), "请用支付宝扫码支付", font=ImageFont.truetype(self.font_path, 20), fill='black')
         #绘制小字
         draw.text(((width ) / 2, height - 20), "感谢开源字体`临海隶书`", font=ImageFont.truetype(self.font_path, 20), fill='red')
         # 保存图片

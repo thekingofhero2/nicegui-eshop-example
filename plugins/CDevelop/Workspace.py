@@ -46,8 +46,8 @@ class AssetFileMaker:
                         """,
             "assetprice":1.99,
             "asset_img_url":"/assets/default_asset_pic.png",
-            "asset_before_img_url":None,
-            "asset_after_img_url":None,
+            "asset_before_img_url":"https://vip.helloimg.com/i/2024/08/19/66c2e85ed9851.jpg",
+            "asset_after_img_url":"https://vip.helloimg.com/i/2024/08/19/66c2e86041462.jpg",
             "asset_8pic_url":None,
             "if_checked":False
             
@@ -61,70 +61,106 @@ class AssetFileMaker:
         pass
 
     def upload_image(self,):
-        """
-        -- 极速图床版
-        上传付费前可看见的图片
-        """
+        
         
    
         
-        jisu_pic_token = app.storage.user['auth_config']['jisu_pic_token']
+        pic_token = app.storage.user['auth_config']['pic_token']
         pic8_pid = app.storage.user['auth_config']['pic8_pid']
         pic8_key = app.storage.user['auth_config']['pic8_key']
-        if jisu_pic_token == '' or \
+        if pic_token == '' or \
            pic8_pid == '' or \
             pic8_key == ''   :
             ui.notify("请回到管理后台，填写“2.参数配置”并做好验证",position="center",type="warning")
             return
         ##################
+        
+        # files=[
+        #         ('file',('04069acbef5bb66fcaba8365c95d3a95.jpg',open('/D:/04069acbef5bb66fcaba8365c95d3a95.jpg','rb'),'image/jpeg'))
+        #         ]
+        
+
+        # response = requests.request("POST", url, headers=headers, data=payload, files=files)
+        """
+        上传付费前可看见的图片
+        """
         with open(self.asset_before_img_path,'rb') as fp:
-            res = requests.post("https://tucdn.wpon.cn/api/upload",files={"image":(f"{time.time()}.png",fp.read())},headers={"token":jisu_pic_token})
+            res = requests.post("https://tucdn.wpon.cn/api/upload",files={"image":(f"{time.time()}.jpg",fp.read())},headers={"token":pic_token})
         
         res_json = json.loads(res.content.decode("utf-8"))
         #print(res_json)
         if res_json['code'] == 200:
             self.asset_obj_dict["asset_before_img_url"] = res_json["data"]["url"]
+
         """
         上传付费后可看见的图片
         """
         with open(self.asset_after_img_path,'rb') as fp:
-            res = requests.post("https://tucdn.wpon.cn/api/upload",files={"image":(f"{time.time()}.png",fp.read())},headers={"token":jisu_pic_token})
+            res = requests.post("https://tucdn.wpon.cn/api/upload",files={"image":(f"{time.time()}.png",fp.read())},headers={"token":pic_token})
         #print("--")
         res_json = json.loads(res.content.decode("utf-8"))
         #print(res_json)
         if res_json['code'] == 200:
             self.asset_obj_dict["asset_after_img_url"] = res_json["data"]["url"]
 
-        
-        #上传图片至8图片
-        #to_8pic_url = f"""http://web.8tupian.com/api/b.php?act=up2&pic={self.asset_obj_dict["asset_before_img_url"]}&pic2={self.asset_obj_dict["asset_after_img_url"]}&price={int(self.asset_obj_dict["assetprice"] * 100)}&pid={pic8_pid}&key={pic8_key}"""   
-        to_8pic_url = f"""http://web.8tupian.com/api/b.php?act=up2&pic={self.asset_obj_dict["asset_before_img_url"]}&pic2={self.asset_obj_dict["asset_after_img_url"]}&price=1&pid={pic8_pid}&key={pic8_key}""" 
+        # 其他图床"""
+        # 上传付费前可看见的图片
+        # pic_headers = {
+        #     'Authorization': 'Bearer '+pic_token,
+        #     'Accept': 'application/json',
+        #     }
+        # """
+        # with open(self.asset_before_img_path,'rb') as fp:
+        #     res = requests.post("https://www.helloimg.com/api/v1/upload",files={'file': (self.asset_before_img_path,fp,'image/jpeg')},headers=pic_headers,verify=False)
+        # if res.status_code == 200:
+        #     res_json = json.loads(res.content.decode("utf-8"))
+        #     if res_json['status'] :
+        #         self.asset_obj_dict["asset_before_img_url"] = res_json['data']['links']['url']
+        # """
+        # 上传付费后可看见的图片
+        # """
+        # with open(self.asset_after_img_path,'rb') as fp:
+        #     res = requests.post("https://www.helloimg.com/api/v1/upload",files={'file': (self.asset_after_img_path,fp,'image/jpeg')},headers=pic_headers,verify=False)
+        # if res.status_code == 200:
+        #     res_json = json.loads(res.content.decode("utf-8"))
+        #     if res_json['status'] :
+        #         self.asset_obj_dict["asset_after_img_url"] = res_json['data']['links']['url']
+
+        time.sleep(1)
+
+        ############上传图片至8图片
+        to_8pic_url = f"""http://web.8tupian.com/api/b.php?act=up2&pic={self.asset_obj_dict["asset_before_img_url"]}&pic2={self.asset_obj_dict["asset_after_img_url"]}&price={int(self.asset_obj_dict["assetprice"] * 100)}&pid={pic8_pid}&key={pic8_key}"""   
+        #to_8pic_url = f"""http://web.8tupian.com/api/b.php?act=up2&pic={self.asset_obj_dict["asset_before_img_url"]}&pic2={self.asset_obj_dict["asset_after_img_url"]}&price=1&pid={pic8_pid}&key={pic8_key}""" 
+        #print(to_8pic_url)
         res = requests.post(to_8pic_url)
+        #print(res)
         res_json = json.loads(res.content.decode("utf-8"))
-        print(res_json)
-        #{'code': 0, 'picurl': 'http://dt1.8tupian.net/2/14535a30b1989.pg1'}
-        #http://dt3.8tupian.net/2/14535a31b1.pg1
+        #print(res_json)
         if res_json['code'] == 0:
             self.asset_obj_dict["asset_pic8_url"] = res_json["picurl"]
+                #break
         ##############
 
 
         # self.asset_obj_dict["asset_before_img_url"]  = "https://tucdn.wpon.cn/2024/07/19/ecbab3ee7a236.png"
         # self.asset_obj_dict["asset_after_img_url"] = "https://tucdn.wpon.cn/2024/07/19/363fa34185f7b.png"
         # self.asset_obj_dict["asset_pic8_url"] = "http://dt2.8tupian.net/2/14535a32b1.pg1"
-
-        if self.asset_obj_dict["asset_before_img_url"] is not None \
-            and self.asset_obj_dict["asset_after_img_url"] is not None \
-            and self.asset_obj_dict["asset_pic8_url"] is not None:
-                self.asset_obj_dict["assetinfo"] = f"""本资源包含：*********请添加资源说明****************
-                        资源内容需要解压“encrypted.zip”，解压密码需要付费后可见，付费链接 : {self.asset_obj_dict["asset_pic8_url"]}
-                        声明：本资源符合国家法律要求，保证无不良引导。资源内容仅供学习参考使用。
-                        """
-                self.asset_obj.assetinfo = self.asset_obj_dict["assetinfo"]
-                self.asset_obj.asset_before_img_url = self.asset_obj_dict["asset_before_img_url"]
-                self.asset_obj.asset_after_img_url = self.asset_obj_dict["asset_after_img_url"]
-                self.asset_obj.asset_8pic_url = self.asset_obj_dict["asset_pic8_url"]
-                self.db.commit()
+        try:
+            if self.asset_obj_dict["asset_pic8_url"] is not None:
+                    self.asset_obj_dict["assetinfo"] = f"""本资源包含：*********请添加资源说明****************
+                            资源内容需要解压“encrypted.zip”，解压密码需要付费后可见，付费链接 : {self.asset_obj_dict["asset_pic8_url"]}
+                            声明：本资源符合国家法律要求，保证无不良引导。资源内容仅供学习参考使用。
+                            """
+                    self.asset_obj.assetinfo = self.asset_obj_dict["assetinfo"]
+                    self.asset_obj.asset_before_img_url = self.asset_obj_dict["asset_before_img_url"]
+                    self.asset_obj.asset_after_img_url = self.asset_obj_dict["asset_after_img_url"]
+                    self.asset_obj.asset_8pic_url = self.asset_obj_dict["asset_pic8_url"]
+                    self.db.commit()
+            else:
+                print("上传失败，请重试1",type="warning")
+        except:
+            print("上传失败，请重试2",type="warning")  
+            
 
     def add_new_one(self,e:events.ClickEventArguments):
         self.init()
@@ -133,8 +169,8 @@ class AssetFileMaker:
         self.asset_obj_dict["assetpath"] = os.path.join("uploads",str(time.time()))
         self.asset_org_dir = os.path.join(self.asset_obj_dict["assetpath"],"org")
         self.asset_des_dir = os.path.join(self.asset_obj_dict["assetpath"],"des")
-        self.asset_before_img_path = os.path.join(self.asset_obj_dict["assetpath"],"付费前图片.png")
-        self.asset_after_img_path = os.path.join(self.asset_obj_dict["assetpath"],"付费后图片.png")
+        self.asset_before_img_path = os.path.join(self.asset_obj_dict["assetpath"],"付费前图片.jpg")
+        self.asset_after_img_path = os.path.join(self.asset_obj_dict["assetpath"],"付费后图片.jpg")
         #本资源根目录
         os.makedirs(self.asset_obj_dict["assetpath"])
         #本资源原始文件目录
@@ -142,7 +178,6 @@ class AssetFileMaker:
         #本资源目标目录
         os.mkdir(self.asset_des_dir)
         self.signals_dict["task.show"] = True
-        print(self.signals_dict["task.show"])
         self.ui_maker.refresh()
 
     def gen_pic(self,e:events.ClickEventArguments):
@@ -178,7 +213,7 @@ class AssetFileMaker:
                             self.ui_filename = ui.input("资源名称",placeholder="资源名称长度应该在16位以内",validation={'名称太长了': lambda value: len(value) <= 16,
                                                                                                         '名称不能为空':lambda value : len(value) > 0,
                                                                                                         '资源名称有重复':lambda value: not crud.check_asset_exists(self.db ,value)}).bind_value(self.asset_obj_dict,"assetname")
-                            ui.label("2.选择要上传的文件(点击“+”添加文件，然后点击“对号”进行上传)").classes("text-h6 text-blue-grey-9")
+                            ui.label("2.选择要上传的文件(点击“+”添加文件，然后点击“上传按钮”进行上传)").classes("text-h6 text-blue-grey-9")
                             ui_targetfile = ui.upload(multiple=True,on_multi_upload=self.multi_upload)
                             ui.label("3.设置加密密码").classes("text-h6 text-blue-grey-9")
                             self.ui_pwd = ui.input("密码",placeholder="输入长度应该在8位以内",validation={'密码太长了': lambda value: len(value) <= 8}).bind_value(self.asset_obj_dict,"assetpwd")
