@@ -129,7 +129,7 @@ class AssetFileMaker:
         time.sleep(1)
 
         ############上传图片至8图片
-        to_8pic_url = f"""http://web.8tupian.com/api/b.php?act=up2&pic={self.asset_obj_dict["asset_before_img_url"]}&pic2={self.asset_obj_dict["asset_after_img_url"]}&price={int(self.asset_obj_dict["assetprice"] * 100)}&pid={pic8_pid}&key={pic8_key}"""   
+        to_8pic_url = f"""http://web.8tupian.com/api/b.php?act=up2&pic={self.asset_obj_dict["asset_before_img_url"]}&pic2={self.asset_obj_dict["asset_after_img_url"]}&price={int(float(self.asset_obj_dict["assetprice"]) * 100)}&pid={pic8_pid}&key={pic8_key}"""   
         #to_8pic_url = f"""http://web.8tupian.com/api/b.php?act=up2&pic={self.asset_obj_dict["asset_before_img_url"]}&pic2={self.asset_obj_dict["asset_after_img_url"]}&price=1&pid={pic8_pid}&key={pic8_key}""" 
         #print(to_8pic_url)
         res = requests.post(to_8pic_url)

@@ -4,7 +4,8 @@ from settings import ROOT
 
 class PicMaker:
     def __init__(self):
-        self.font_path = os.path.join(ROOT,'assets','fonts','LinHaiLiShu-Regular_V1.002.ttf')
+        #self.font_path = os.path.join(ROOT,'assets','fonts','LinHaiLiShu-Regular_V1.002.ttf')
+        self.font_path = os.path.join(ROOT,'assets','fonts','simhei.ttf')
     
     def maker(self,title="资源的基本信息：",text = "你好啊",img_filename = 'text_image.png'):
         """
@@ -32,7 +33,7 @@ class PicMaker:
         # 绘制文字
         draw.text((10, height - 60), "请用支付宝扫码支付", font=ImageFont.truetype(self.font_path, 20), fill='black')
         #绘制小字
-        draw.text(((width ) / 2, height - 20), "感谢开源字体`临海隶书`", font=ImageFont.truetype(self.font_path, 20), fill='red')
+        draw.text(((width ) / 2, height - 20), "感谢字体`simhei`", font=ImageFont.truetype(self.font_path, 20), fill='red')
         # 保存图片
         image.save(img_filename)
 
