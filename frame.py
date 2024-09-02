@@ -13,7 +13,7 @@ def frame(nav_title :str,left_navs :List[NavItem],show_drawer=False):
             if  nav_title!="首页":
                 ui.button(icon='menu',on_click=lambda :left_drawer.toggle() ).props('flat color=white')           
             with ui.link(target="/"):
-                ui.button("jianpanrensheng").props("flat").style("font-size:150%;font-width:300").classes("text-yellow-6")
+                ui.button("键盘人生").props("flat").style("font-size:150%;font-width:300").classes("text-yellow-6")
                 #ui.button("jjz").props("flat").style("font-size:150%;font-width:300").classes("text-yellow-6")
             for section in sections:
                 with ui.link(target = section.uri):
