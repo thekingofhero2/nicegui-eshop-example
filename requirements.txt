@@ -1,4 +1,4 @@
-nicegui==1.4.27
+nicegui
 SQLAlchemy==1.4.7
 pillow==10.4.0
 pyzipper==0.3.6
